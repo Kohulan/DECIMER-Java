@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.depict.DepictionGenerator;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -27,15 +26,17 @@ public class StructureDepictorGrayscale {
 	boolean verbose = false;
 
 	public static void main(String[] args) throws CDKException, IOException {
+		IAtomContainer molecule;
+		StructureDiagramGenerator sdg = null;
+		int x;		
+		
 		long startTime = System.nanoTime();
 		File folder = new File("D:\\Project\\Chembl_Data\\test\\");
 		File[] listOfFiles = folder.listFiles();
-		int x;
+	
 		for (x = 0; x < listOfFiles.length; x++) {
 			File file = listOfFiles[x];
-			if (file.isFile() && file.getName().endsWith(".sdf")) { // change .pdb if you are using a different file
-																	// format
-
+			if (file.isFile() && file.getName().endsWith(".sdf")) { 
 				FileReader sdfile = null;
 				try {
 					sdfile = new FileReader(file);
@@ -44,18 +45,16 @@ public class StructureDepictorGrayscale {
 					System.exit(1);
 				}
 				IteratingSDFReader sdf = new IteratingSDFReader(sdfile, SilentChemObjectBuilder.getInstance());
-				IAtomContainer ac = SilentChemObjectBuilder.getInstance().newAtomContainer();
-				StructureDiagramGenerator sdg = new StructureDiagramGenerator();
-				sdg.setMolecule(ac);
-				sdg.generateCoordinates();
-				IAtomContainer layedOutMol = sdg.getMolecule();
+				sdg = new StructureDiagramGenerator();
 				String filename = file.toString();
 				filename = filename.substring(0, filename.length() - 4);
 				while (sdf.hasNext()) {
-					layedOutMol = sdf.next();
-					layedOutMol.setProperty(CDKConstants.TITLE, file);
+					molecule = sdf.next();
+					sdg.setMolecule(molecule);
+					sdg.generateCoordinates();
+					molecule = sdg.getMolecule();
 					DepictionGenerator dptgen = new DepictionGenerator().withSize(1048,1048).withAtomValues();
-					dptgen.depict(layedOutMol).writeTo(filename+"_M1_G.png");
+					dptgen.depict(molecule).writeTo(filename+"_M1_G.png");
 					}
 				sdf.close();
 				
@@ -69,6 +68,3 @@ public class StructureDepictorGrayscale {
 	}
 }
 
-
-//BufferedImage buf = new BufferedImage(1048, 1048, BufferedImage.TYPE_3BYTE_BGR);
-//dptgen.depict(layedOutMol).writeTo(filename+"_M1_G.png")
