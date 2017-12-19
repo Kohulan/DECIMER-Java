@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.depict.DepictionGenerator;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -30,10 +29,14 @@ public class StrcutureDepitor8bit {
 	boolean verbose = false;
 
 	public static void main(String[] args) throws CDKException, IOException {
+		IAtomContainer molecule;
+		StructureDiagramGenerator sdg = null;
+		int x;	
+		
 		long startTime = System.nanoTime();
 		File folder = new File("D:\\Project\\Chembl_Data\\Test2\\");
 		File[] listOfFiles = folder.listFiles();
-		int x;
+		
 		// omp parallel for
 		for (x = 0; x < listOfFiles.length; x++) {
 			File file = listOfFiles[x];
@@ -47,18 +50,18 @@ public class StrcutureDepitor8bit {
 					System.exit(1);
 				}
 				IteratingSDFReader sdf = new IteratingSDFReader(sdfile, SilentChemObjectBuilder.getInstance());
-				IAtomContainer ac = SilentChemObjectBuilder.getInstance().newAtomContainer();
-				StructureDiagramGenerator sdg = new StructureDiagramGenerator();
-				sdg.setMolecule(ac);
-				sdg.generateCoordinates();
-				IAtomContainer layedOutMol = sdg.getMolecule();
+				sdg = new StructureDiagramGenerator();
+				
+				
 				String filename = file.toString();
 				filename = filename.substring(0, filename.length() - 4);
 				while (sdf.hasNext()) {
-					layedOutMol = sdf.next();
-					layedOutMol.setProperty(CDKConstants.TITLE, file);
+					molecule = sdf.next();
+					sdg.setMolecule(molecule);
+					sdg.generateCoordinates();
+					molecule = sdg.getMolecule();
 					DepictionGenerator dptgen = new DepictionGenerator().withSize(1048, 1048).withAtomValues();
-					dptgen.depict(layedOutMol).writeTo(filename + "_M1_G.png");
+					dptgen.depict(molecule).writeTo(filename + "_M1_G.png");
 
 					// Image conversion to 8 bit using ImagePlus API
 					IJ.open(filename + "_M1_G.png"); // Input of image depicted using CDk Depiction generator
