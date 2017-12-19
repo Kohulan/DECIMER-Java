@@ -4,6 +4,7 @@
  * Copyright (c) 2017, Kohulan Rajan 
  */
 package org.openscience.decimer;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,17 +22,21 @@ import org.openscience.cdk.silent.SilentChemObjectBuilder;
 
 public class MolWeightCalculator {
 	public static void main(String[] args) throws CDKException, IOException {
+		IAtomContainer molecule;
+
+		int x;
+
 		long startTime = System.nanoTime();
 		File folder = new File("D:\\Project\\Chembl_Data\\Chembl_23_10\\");
 		File[] listOfFiles = folder.listFiles();
-		int x;
+
 		File fileout = new File("D:\\Project\\Chembl_Data\\test\\Chembl_23_10.csv");
-				if (!fileout.exists()) {
-					fileout.createNewFile();
-				}
+		if (!fileout.exists()) {
+			fileout.createNewFile();
+		}
 		for (x = 0; x < listOfFiles.length; x++) {
 			File file = listOfFiles[x];
-			if (file.isFile() && file.getName().endsWith(".sdf")) { 
+			if (file.isFile() && file.getName().endsWith(".sdf")) {
 
 				FileReader sdfile = null;
 				try {
@@ -41,21 +46,19 @@ public class MolWeightCalculator {
 					System.exit(1);
 				}
 				IteratingSDFReader sdf = new IteratingSDFReader(sdfile, SilentChemObjectBuilder.getInstance());
-				IAtomContainer ac = SilentChemObjectBuilder.getInstance().newAtomContainer();
 				String filename = file.getName();
-				//filename = filename.substring(0, filename.length()-4);
-				
+				// filename = filename.substring(0, filename.length()-4);
+
 				FileWriter fw = new FileWriter(fileout.getAbsoluteFile(), true);
-				
+
 				BufferedWriter bufferWriter = new BufferedWriter(fw);
-				
+
 				while (sdf.hasNext()) {
-					ac = sdf.next();
-					
+					molecule = sdf.next();
 					WeightDescriptor wei = new WeightDescriptor();
-					DescriptorValue weight = wei.calculate(ac);
-					bufferWriter.write( filename + "," + weight.getValue() +  "\n");								
-					}
+					DescriptorValue weight = wei.calculate(molecule);
+					bufferWriter.write(filename + "," + weight.getValue() + "\n");
+				}
 				sdf.close();
 				bufferWriter.close();
 			}
@@ -64,6 +67,6 @@ public class MolWeightCalculator {
 		long endTime = System.nanoTime() - startTime;
 		double seconds = (double) endTime / 1000000000.0;
 		DecimalFormat d = new DecimalFormat(".###");
-		System.out.println(" Time: "+ d.format(seconds)+" seconds");
+		System.out.println(" Time: " + d.format(seconds) + " seconds");
 	}
 }
