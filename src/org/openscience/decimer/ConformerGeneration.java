@@ -32,10 +32,15 @@ public class ConformerGeneration {
 	boolean verbose = false;
 
 	public static void main(String[] args) throws CDKException, IOException {
-		long startTime = System.nanoTime();
-		File folder = new File("input folder path");
-		File[] listOfFiles = folder.listFiles();
+		IAtomContainer ac;
+		StructureDiagramGenerator sdg = null;
 		int x;
+		
+		
+		long startTime = System.nanoTime();
+		File folder = new File("D:\\Project\\Chembl_Data\\test45");
+		File[] listOfFiles = folder.listFiles();
+		
 		for (x = 0; x < listOfFiles.length; x++) {
 			File file = listOfFiles[x];
 			if (file.isFile() && file.getName().endsWith(".sdf")) {
@@ -47,33 +52,31 @@ public class ConformerGeneration {
 					System.exit(1);
 				}
 				IteratingSDFReader sdf = new IteratingSDFReader(sdfile, SilentChemObjectBuilder.getInstance());
-				IAtomContainer ac = SilentChemObjectBuilder.getInstance().newAtomContainer();
-				StructureDiagramGenerator sdg = new StructureDiagramGenerator();
-				sdg.setMolecule(ac);
-				sdg.generateCoordinates();
-				IAtomContainer layedOutMol = sdg.getMolecule();
-				String filename = file.toString();
+				sdg = new StructureDiagramGenerator();
+				String filename = file.getName();
 				filename = filename.substring(0, filename.length() - 4);
 				while (sdf.hasNext()) {
-					layedOutMol = sdf.next();
-					Point2d point = GeometryTools.get2DCenter(layedOutMol);
+					ac = sdf.next();
+					sdg.setMolecule(ac);
+					sdg.generateCoordinates();
+					ac = sdg.getMolecule();
+					Point2d point = GeometryTools.get2DCenter(ac);
 
 					for (double i = 0.0; i < 360.0; i = i + 45) {
 						// Initial Depiction 32 Bit
-						DepictionGenerator dptgen2 = new DepictionGenerator().withSize(1024, 1024).withAtomValues();
-						System.out.println(i);
-						dptgen2.depict(layedOutMol).writeTo(filename + "_R" + i + ".png");
+						DepictionGenerator dptgen = new DepictionGenerator().withSize(1024, 1024).withAtomValues();
+						dptgen.depict(ac).writeTo("D:\\Project\\Chembl_Data\\test45\\images\\"+filename + "_R" + i + ".png");
 
 						// Image conversion to 8 bit using ImagePlus API
-						IJ.open(filename + "_R" + i + ".png"); // Input of image depicted using CDk Depiction generator
+						IJ.open("D:\\Project\\Chembl_Data\\test45\\images\\"+filename + "_R" + i + ".png"); // Input of image depicted using CDk Depiction generator
 						ImagePlus img = IJ.getImage();
 						ImageConverter iconv = new ImageConverter(img);
 						iconv.convertToGray8();
 						img.updateAndDraw();
-						IJ.save(filename + "_R" + i + ".png"); // 8 bit grayscaled image replacing the original image
+						IJ.save("D:\\Project\\Chembl_Data\\test45\\images\\"+filename + "_R" + i + ".png"); // 8 bit grayscaled image replacing the original image
 
 						// Rotating the molecule by 45 Degree and rendering the structure
-						GeometryTools.rotate(layedOutMol, point, (45 * Math.PI / 180.0));
+						GeometryTools.rotate(ac, point, (45 * Math.PI / 180.0));
 					}
 
 				}
