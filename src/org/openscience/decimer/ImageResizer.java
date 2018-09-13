@@ -1,4 +1,10 @@
+/*
+ * This Software is under the MIT License
+ * Refer to LICENSE or https://opensource.org/licenses/MIT for more information
+ * Copyright (c) 2017, Kohulan Rajan
+ */
 
+package org.openscience.decimer;
 
 import java.text.DecimalFormat;
 
