@@ -67,7 +67,9 @@ public class RejectChargedMols {
 
 					try {
 
-						if (AtomContainerManipulator.getTotalFormalCharge(molecule) == 0.0) {
+						if (AtomContainerManipulator.getTotalFormalCharge(molecule) == 0.0
+								&& AtomContainerManipulator.getTotalNegativeFormalCharge(molecule) == 0.0
+								&& AtomContainerManipulator.getTotalPositiveFormalCharge(molecule) == 0.0) {
 							IAtomContainer mol_new = AtomContainerManipulator.removeHydrogens(molecule);
 							SmilesGenerator sg = new SmilesGenerator(SmiFlavor.Generic);
 							String smi = sg.create(mol_new);
