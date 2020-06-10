@@ -31,6 +31,17 @@ The project is co-supervised by Prof. Christoph Steinbeck, Jena, and Prof. Achim
         └ ─ TanimotoCalculator.java
 
 ```
+## How to use the scripts
+- The java codes can be used by cloning the repository and compiling them using CDK as referenced library.
+    - you have to change the input and output directory in every code before you use them.
+    - for example : - Generating Images
+            - We can use SmilesDepictor.java
+            
+  ```bash
+  e.g: 
+  javac -cp cdk-2.3.jar:. SmilesDepictor.java   # Compiling the script on your local directory.
+  java -cp cdk-2.3.jar:. SmilesDepictor         # Run the compiled script.
+  ```
 
 ## License:
 - This project is licensed under the MIT License - see the [LICENSE](https://github.com/Kohulan/Decimer-Python/blob/master/LICENSE) file for details
