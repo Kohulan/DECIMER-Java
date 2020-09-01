@@ -19,6 +19,7 @@ import org.openscience.cdk.depict.DepictionGenerator;
 import org.openscience.cdk.geometry.GeometryTools;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.layout.StructureDiagramGenerator;
+import org.openscience.cdk.renderer.color.UniColor;
 import org.openscience.cdk.renderer.generators.BasicSceneGenerator;
 import org.openscience.cdk.smiles.SmilesParser;
 import org.openscience.cdk.renderer.generators.standard.StandardGenerator;
@@ -73,7 +74,10 @@ public class SmilesDepictor {
 			i = i * 360.0 + 0.0;
 			GeometryTools.rotate(molecule, point, (i * Math.PI / 180.0));
 			DepictionGenerator dptgen = new DepictionGenerator().withSize(299, 299).withAtomValues()
-					.withParam(BasicSceneGenerator.ZoomFactor.class, 1.0);
+			.withParam(StandardGenerator.StrokeRatio.class, 1.0)
+			.withAnnotationColor(Color.BLACK).withParam(StandardGenerator.AtomColor.class, new UniColor(Color.BLACK))
+			.withBackgroundColor(Color.WHITE);
+			
 			BufferedImage image = dptgen.depict(molecule).toImg();
 			BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 			result.createGraphics().drawImage(image, 0, 0, Color.WHITE, null);
