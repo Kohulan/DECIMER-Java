@@ -48,8 +48,7 @@ The project is co-supervised by Prof. Christoph Steinbeck, Jena, and Prof. Achim
 
 ## Author:
 - [Kohulan](github.com/Kohulan)
-
-![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/blob/master/assets/DECIMER_logo.png?raw=true)
+[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif)](https://kohulan.github.io/Decimer-Official-Site/)
 ## Project Website
 - [DECIMER](https://kohulan.github.io/Decimer-Official-Site/)
 ## Research Group
